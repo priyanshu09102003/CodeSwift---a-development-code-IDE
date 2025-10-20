@@ -2,23 +2,133 @@
 
 import { Keyboard } from "@/components/Keyboard";
 import { Keycap } from "@/components/Keycap";
+import { useGSAP } from "@gsap/react";
 import { Environment, PerspectiveCamera } from "@react-three/drei";
-import { useControls } from "leva";
+import { useFrame, useThree } from "@react-three/fiber";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useEffect, useRef, useState } from "react";
+import * as THREE from "three"
+
+gsap.registerPlugin(useGSAP , ScrollTrigger)
+
+function CameraController(){
+    const {camera, size } = useThree()
+
+    const mouseRef = useRef({x: 0.5, y: 0.5})
+
+    const targetRef = useRef(new THREE.Vector3(0,0,0));
+    const currentPositionRef = useRef(new THREE.Vector3(0,0,4));
+
+    const baseCameraPosition = {
+        x: 0,
+        y: 0,
+        z: 4
+    }
+
+    useFrame(() => {
+        const mouse = mouseRef.current
+
+        const tiltX = (mouse.y - 0.5) * 0.5
+        const tiltY = (mouse.x - 0.5) * 0.5
+
+
+        const targetPosition = new THREE.Vector3(baseCameraPosition.x + tiltY, 
+            baseCameraPosition.y - tiltX,
+            baseCameraPosition.z
+        );
+
+        currentPositionRef.current.lerp(targetPosition, 0.1)
+
+        camera.position.copy(currentPositionRef.current)
+        camera.lookAt(targetRef.current)
+    })
+
+    useEffect(() => {
+        const handleMouseMove = (event: MouseEvent) => {
+            mouseRef.current.x = event.clientX / size.width
+            mouseRef.current.y = event.clientY / size.height
+        }
+
+        if(typeof window != "undefined"){
+            window.addEventListener("mousemove" , handleMouseMove);
+            return () => window.removeEventListener("mousemove" , handleMouseMove)
+        }
+    }, [size]);
+
+    return null;
+}
 
 export function Scene (){
 
-    const {positionX, positionY , positionZ, rotationX, rotationY , rotationZ} = useControls({
-        positionX:0 , 
-        positionY: -0.55, 
-        positionZ: 3.2,
-        rotationX: Math.PI/2 , 
-        rotationY: 0, 
-        rotationZ: 0,
-    })
+    
+    const keyboardGroupRef = useRef<THREE.Group>(null)
+
+    const [lightIntensityScalar, setlightIntensityScalar] = useState(0);
+
 
     const scalingFactor = window.innerWidth <= 768 ? .35 : 1;
+
+    useGSAP(() => {
+        
+        
+        const mm = gsap.matchMedia()
+        
+        mm.add("(prefers-reduced-motion: no-preference" , () => {
+            
+            if(!keyboardGroupRef.current) return;
+
+            const keyboard = keyboardGroupRef.current
+
+
+            gsap.to(
+                {lightIntensityScalar: 0},
+                {lightIntensityScalar: 1,
+                    duration: 3.5,
+                    delay: 0.6,
+                    ease: "power2.inOut",
+                    onUpdate: function(){
+                        setlightIntensityScalar(this.targets()[0].lightIntensityScalar)
+                    }
+                }
+    
+            )
+
+
+            const tl = gsap.timeline({
+                ease: "power2.inOut"
+            })
+
+            tl.to(keyboard.position, {
+                x: 0,
+                y: -0.55,
+                z: 0.5,
+                duration:2.5
+            }).to(keyboard.rotation, {
+                x: 1.4,
+                y: 0,
+                z: 0,
+                duration:2
+            }, "<")
+            .to(keyboard.position, {
+                x: 0.2,
+                y: -0.55,
+                z: 1.9,
+                duration:2.5,
+                delay: 0.5
+            }).to(keyboard.rotation, {
+                x: 1.6,
+                y: 0.33,
+                z: 0,
+                duration:2.5
+            }, "<")
+
+        })
+    })
     return (
         <group>
+
+            <CameraController />
 
             <PerspectiveCamera
             position={[0, 0 , 4]}
@@ -27,9 +137,15 @@ export function Scene (){
             />
 
             <group scale={scalingFactor}>
-                <Keyboard scale={9} 
-                position={[0.2, -0.55, 1.9]} 
-                rotation={[1.6, 0.33, 0]} />
+                
+                <group  
+                ref = {keyboardGroupRef}
+                >
+
+
+
+                    <Keyboard scale={9}/>
+                </group>
 
                 <group>
                     <Keycap 
@@ -58,12 +174,12 @@ export function Scene (){
 
             <Environment
             files={["/hdr/blue-studio.hdr"]}
-            environmentIntensity={0.05}
+            environmentIntensity={0.08 * lightIntensityScalar}
             />
 
             <spotLight
             position={[-2, 1.5, 4]}
-            intensity={30}
+            intensity={30 * lightIntensityScalar}
             castShadow
             shadow-bias={-0.0002}
             shadow-normalBias = {0.002}
