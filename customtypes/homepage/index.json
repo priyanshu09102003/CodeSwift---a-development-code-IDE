@@ -11,6 +11,9 @@
         "fieldset": "Slice Zone",
         "config": {
           "choices": {
+            "editors_playground": {
+              "type": "SharedSlice"
+            },
             "bento_box": {
               "type": "SharedSlice"
             },

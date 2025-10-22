@@ -4,5 +4,6 @@ import dynamic from "next/dynamic";
 
 export const components = {
   bento_box: dynamic(() => import("./BentoBox")),
+  editors_playground: dynamic(() => import("./EditorsPlayground")),
   hero: dynamic(() => import("./Hero")),
 };

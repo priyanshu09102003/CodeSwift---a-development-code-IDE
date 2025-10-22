@@ -71,6 +71,14 @@
 						]
 					}
 				]
+			},
+			"switch": {
+				"__TYPE__": "LinkContent",
+				"key": "5916b97f-fd50-4d71-97a0-00665c413156",
+				"value": {
+					"__TYPE__": "DocumentLink",
+					"id": "mock_document_id"
+				}
 			}
 		},
 		"items": []

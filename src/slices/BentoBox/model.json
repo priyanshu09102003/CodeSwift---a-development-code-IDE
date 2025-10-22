@@ -58,6 +58,23 @@
               }
             }
           }
+        },
+        "switch": {
+          "type": "Link",
+          "config": {
+            "label": "Switch",
+            "select": "document",
+            "repeat": false,
+            "customtypes": [
+              {
+                "id": "switch",
+                "fields": [
+                  "name",
+                  "color"
+                ]
+              }
+            ]
+          }
         }
       },
       "items": {}

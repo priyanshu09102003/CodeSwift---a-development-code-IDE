@@ -69,7 +69,10 @@ type ContentRelationshipFieldWithData<
   >;
 }[Exclude<TCustomType[number], string>["id"]];
 
-type HomepageDocumentDataSlicesSlice = BentoBoxSlice | HeroSlice;
+type HomepageDocumentDataSlicesSlice =
+  | EditorsPlaygroundSlice
+  | BentoBoxSlice
+  | HeroSlice;
 
 /**
  * Content for Homepage documents
@@ -134,7 +137,46 @@ export type HomepageDocument<Lang extends string = string> =
     Lang
   >;
 
-export type AllDocumentTypes = HomepageDocument;
+/**
+ * Content for Switch documents
+ */
+interface SwitchDocumentData {
+  /**
+   * Name field in *Switch*
+   *
+   * - **Field Type**: Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: switch.name
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/text
+   */
+  name: prismic.KeyTextField;
+
+  /**
+   * HexColor field in *Switch*
+   *
+   * - **Field Type**: Color
+   * - **Placeholder**: *None*
+   * - **API ID Path**: switch.color
+   * - **Tab**: Main
+   * - **Documentation**: https://prismic.io/docs/fields/color
+   */
+  color: prismic.ColorField;
+}
+
+/**
+ * Switch document from Prismic
+ *
+ * - **API ID**: `switch`
+ * - **Repeatable**: `true`
+ * - **Documentation**: https://prismic.io/docs/content-modeling
+ *
+ * @typeParam Lang - Language API ID of the document.
+ */
+export type SwitchDocument<Lang extends string = string> =
+  prismic.PrismicDocumentWithUID<Simplify<SwitchDocumentData>, "switch", Lang>;
+
+export type AllDocumentTypes = HomepageDocument | SwitchDocument;
 
 /**
  * Item in *BentoBox → Default → Primary → Items*
@@ -194,6 +236,18 @@ export interface BentoBoxSliceDefaultPrimary {
    * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
    */
   items: prismic.GroupField<Simplify<BentoBoxSliceDefaultPrimaryItemsItem>>;
+
+  /**
+   * Switch field in *BentoBox → Default → Primary*
+   *
+   * - **Field Type**: Content Relationship
+   * - **Placeholder**: *None*
+   * - **API ID Path**: bento_box.default.primary.switch
+   * - **Documentation**: https://prismic.io/docs/fields/content-relationship
+   */
+  switch: ContentRelationshipFieldWithData<
+    [{ id: "switch"; fields: ["name", "color"] }]
+  >;
 }
 
 /**
@@ -224,6 +278,90 @@ type BentoBoxSliceVariation = BentoBoxSliceDefault;
 export type BentoBoxSlice = prismic.SharedSlice<
   "bento_box",
   BentoBoxSliceVariation
+>;
+
+/**
+ * Item in *EditorsPlayground → Default → Primary → Switches*
+ */
+export interface EditorsPlaygroundSliceDefaultPrimarySwitchesItem {
+  /**
+   * Switch field in *EditorsPlayground → Default → Primary → Switches*
+   *
+   * - **Field Type**: Content Relationship
+   * - **Placeholder**: *None*
+   * - **API ID Path**: editors_playground.default.primary.switches[].switch
+   * - **Documentation**: https://prismic.io/docs/fields/content-relationship
+   */
+  switch: ContentRelationshipFieldWithData<
+    [{ id: "switch"; fields: ["name", "color"] }]
+  >;
+}
+
+/**
+ * Primary content in *EditorsPlayground → Default → Primary*
+ */
+export interface EditorsPlaygroundSliceDefaultPrimary {
+  /**
+   * Heading field in *EditorsPlayground → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: editors_playground.default.primary.heading
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  heading: prismic.RichTextField;
+
+  /**
+   * Description field in *EditorsPlayground → Default → Primary*
+   *
+   * - **Field Type**: Rich Text
+   * - **Placeholder**: *None*
+   * - **API ID Path**: editors_playground.default.primary.description
+   * - **Documentation**: https://prismic.io/docs/fields/rich-text
+   */
+  description: prismic.RichTextField;
+
+  /**
+   * Switches field in *EditorsPlayground → Default → Primary*
+   *
+   * - **Field Type**: Group
+   * - **Placeholder**: *None*
+   * - **API ID Path**: editors_playground.default.primary.switches[]
+   * - **Documentation**: https://prismic.io/docs/fields/repeatable-group
+   */
+  switches: prismic.GroupField<
+    Simplify<EditorsPlaygroundSliceDefaultPrimarySwitchesItem>
+  >;
+}
+
+/**
+ * Default variation for EditorsPlayground Slice
+ *
+ * - **API ID**: `default`
+ * - **Description**: Default
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type EditorsPlaygroundSliceDefault = prismic.SharedSliceVariation<
+  "default",
+  Simplify<EditorsPlaygroundSliceDefaultPrimary>,
+  never
+>;
+
+/**
+ * Slice variation for *EditorsPlayground*
+ */
+type EditorsPlaygroundSliceVariation = EditorsPlaygroundSliceDefault;
+
+/**
+ * EditorsPlayground Shared Slice
+ *
+ * - **API ID**: `editors_playground`
+ * - **Description**: EditorsPlayground
+ * - **Documentation**: https://prismic.io/docs/slices
+ */
+export type EditorsPlaygroundSlice = prismic.SharedSlice<
+  "editors_playground",
+  EditorsPlaygroundSliceVariation
 >;
 
 /**
@@ -312,12 +450,19 @@ declare module "@prismicio/client" {
       HomepageDocument,
       HomepageDocumentData,
       HomepageDocumentDataSlicesSlice,
+      SwitchDocument,
+      SwitchDocumentData,
       AllDocumentTypes,
       BentoBoxSlice,
       BentoBoxSliceDefaultPrimaryItemsItem,
       BentoBoxSliceDefaultPrimary,
       BentoBoxSliceVariation,
       BentoBoxSliceDefault,
+      EditorsPlaygroundSlice,
+      EditorsPlaygroundSliceDefaultPrimarySwitchesItem,
+      EditorsPlaygroundSliceDefaultPrimary,
+      EditorsPlaygroundSliceVariation,
+      EditorsPlaygroundSliceDefault,
       HeroSlice,
       HeroSliceDefaultPrimary,
       HeroSliceVariation,
