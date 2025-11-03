@@ -4,6 +4,7 @@ import { PrismicRichText, PrismicText, SliceComponentProps } from "@prismicio/re
 import { Bounded } from "@/components/Bounded";
 import { FadeIn } from "@/components/FadeIn";
 import clsx from "clsx";
+import { EditorCard } from "@/components/EditorsCard";
 
 /**
  * Props for `EditorsPlayground`.
@@ -15,6 +16,27 @@ export type EditorsPlaygroundProps =
  * Component for "EditorsPlayground" Slices.
  */
 const EditorsPlayground: FC<EditorsPlaygroundProps> = ({ slice }) => {
+   const editors = [
+    {
+      image: "https://images.unsplash.com/photo-1608760000795-547e78bfc003?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1950",
+      title: "CodeStudio",
+      description: "Professional IDE with intelligent AI assistance.",
+      href: "https://www.google.com",
+    },
+    {
+      image: "https://images.unsplash.com/photo-1600132806608-231446b2e7af?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1074",
+      title: "SketchFlow",
+      description: "Turn wireframes into production-ready code instantly.",
+      href: "https://www.google.com",
+    },
+    {
+      image: "https://plus.unsplash.com/premium_photo-1677269465314-d5d2247a0b0c?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687",
+      title: "AutoBuild",
+      description: "Natural language to production code.",
+      href: "https://www.google.com",
+    },
+  ];
+
   return (
     <Bounded
       data-slice-type={slice.slice_type}
@@ -23,7 +45,7 @@ const EditorsPlayground: FC<EditorsPlaygroundProps> = ({ slice }) => {
       innerClassName="flex flex-col justify-center"
     >
 
-      {/* <FadeIn> */}
+      <FadeIn>
 
       <h2 className="font-bold-slanted text-6xl md:text-8xl uppercase scroll-pt-6 "> 
 
@@ -35,18 +57,24 @@ const EditorsPlayground: FC<EditorsPlaygroundProps> = ({ slice }) => {
            <PrismicRichText field={slice.primary.description} />
         </div>
        
-        {/* <FadeIn targetChildren className="grid grid-cols-1 gap-4 overflow-hidden sm:grid-cols-2"> */}
+       
 
 
-          {slice.primary.switches.map((item) => isFilled.contentRelationship(item.switch)?(
-              <SharedCanvas key={item.switch.id} color={item.switch}/> 
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {editors.map((editor, index) => (
+                <EditorCard
+                  key={index}
+                  image={editor.image}
+                  title={editor.title}
+                  description={editor.description}
+                  href={editor.href}
+                />
+              ))}
+            </div>
 
-          ): null)}
 
-
-        {/* </FadeIn> */}
-
-      {/* </FadeIn> */}
+       
+      </FadeIn>
 
 
       
@@ -56,56 +84,3 @@ const EditorsPlayground: FC<EditorsPlaygroundProps> = ({ slice }) => {
 
 export default EditorsPlayground;
 
-type SharedCanvasprops = {
-  color: Content.EditorsPlaygroundSliceDefaultPrimarySwitchesItem["switch"]
-}
-
-const SharedCanvas = ({color}: SharedCanvasprops) => {
-
-  if(!isFilled.contentRelationship(color) || !color.data) return null;
-
-  const colorName = color.uid as "red" | "brown" | "blue";
-
-  const {color:hex_color , name} = color.data;
-
-  const bgColor = {
-    blue: "bg-sky-950",
-    red: "bg-red-950",
-    brown: "bg-amber-950",
-  }[colorName]
-
-
-
-  return (
-    <div className="group relative min-h-96 overflow-hidden rounded-3xl select-none">
-      {/* Text Button */}
-      {/* Canvas */}
-      
-      <div className={clsx(
-        "font-black-slanted absolute inset-0 -z-10 grid place-items-center text-8xl uppercase",
-        bgColor
-      )}>
-
-        <svg className="pointer-events-none h-auto w-full" viewBox="0 0 75 100">
-          <text
-            x="50%"
-            y="50%"
-            dominantBaseline="middle"
-            textAnchor="middle"
-            fontSize={18}
-            className="font-black-slanted fill-white/30 uppercase mix-blend-overlay group-hover:fill-white/100 motion-safe:transition-all motion-safe:duration-700"
-          >
-            {Array.from({ length: 8 }, (_, i) => (
-              <tspan key={i} x={`${(i + 1) * 10}%`} dy={i === 0 ? -40 : 14}>
-                {colorName}
-                {colorName}
-                {colorName}
-              </tspan>
-            ))}
-          </text>
-        </svg>
-
-      </div>
-    </div>
-  )
-} 
