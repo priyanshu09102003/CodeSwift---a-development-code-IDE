@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Roboto_Flex} from "next/font/google";
 import "./globals.css";
+import { Footer } from "@/components/Footer";
 
 const robotoFlex = Roboto_Flex({
   variable: "--font-roboto-flex",
@@ -25,7 +26,13 @@ export default function RootLayout({
       <body
         className={`${robotoFlex.variable} antialiased`}
       >
-        {children}
+
+        <main className="flex-grow">
+            {children}
+        </main>
+
+        <Footer />
+        
       </body>
     </html>
   );

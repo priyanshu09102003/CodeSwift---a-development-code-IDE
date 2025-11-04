@@ -43,7 +43,7 @@ export const EditorCard: FC<EditorCardProps> = ({ image, title, description, hre
           href={href}
           className="relative z-20 block w-full overflow-hidden rounded-lg bg-black px-6 py-3 font-bold uppercase text-white text-center transition-all duration-300 hover:bg-gray-900 hover:shadow-lg active:scale-95 cursor-pointer"
         >
-          <span className="relative z-10">Use</span>
+          <span className="relative z-10">Launch Editor →</span>
           <div className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700 group-hover:translate-x-full" />
         </a>
       </div>
