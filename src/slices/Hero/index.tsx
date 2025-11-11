@@ -11,9 +11,17 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Loader } from "@/components/Loader";
+import { useProgress } from "@react-three/drei";
 
 
 gsap.registerPlugin(useGSAP, SplitText ,ScrollTrigger)
+
+function LoaderWrapper(){
+  const {active} = useProgress()
+
+  return active ? <Loader/> : null;
+}
 
 /**
  * Props for `Hero`.
@@ -80,10 +88,14 @@ const Hero: FC<HeroProps> = ({ slice }) => {
       <div className="hero-scene sticky pointer-events-none top-0 h-dvh w-full">
         
         <Canvas shadows = "soft">
+          
           <Scene />
         </Canvas>
 
+
       </div>
+
+        <LoaderWrapper />
 
       <div className="hero-content absolute inset-x-0 top-0 h-dvh">
 
