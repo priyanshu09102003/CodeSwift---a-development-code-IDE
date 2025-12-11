@@ -21,7 +21,7 @@ const EditorsPlayground: FC<EditorsPlaygroundProps> = ({ slice }) => {
       image: "https://images.unsplash.com/photo-1608760000795-547e78bfc003?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1950",
       title: "CodeStudio",
       description: "Professional IDE with intelligent AI assistance.",
-      href: "https://www.google.com",
+      href: "https://codeswift-codestudio.vercel.app/dashboard",
     },
     {
       image: "https://images.unsplash.com/photo-1600132806608-231446b2e7af?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=1074",

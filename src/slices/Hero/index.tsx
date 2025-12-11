@@ -131,7 +131,7 @@ const Hero: FC<HeroProps> = ({ slice }) => {
        
 
 
-            <a href="#">
+            <a href="https://codeswift-codestudio.vercel.app/dashboard">
                 <button className="font-bold-slanted flex w-fit cursor-pointer items-center gap-1 rounded bg-[#01A7E1] px-3 py-1 text-2xl uppercase transition group shadow-[0_8px_16px_rgba(0,0,0,0.3)]">
                   {slice.primary.code_playground}
 
